@@ -1,4 +1,4 @@
-package dev.LzGuimaraes.ProjectManager.dto.Projects;
+package dev.LzGuimaraes.ProjectManager.dto.User;
 
 public record UserResumoDTO(
     Long id,
