@@ -15,13 +15,13 @@ import dev.LzGuimaraes.ProjectManager.model.Project;
 import dev.LzGuimaraes.ProjectManager.model.User;
 
 @Service
-public class ProjectSevice {
+public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectMapper projectMapper;
 
-    public ProjectSevice(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper projectMapper) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.projectMapper = projectMapper;

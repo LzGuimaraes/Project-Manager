@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import dev.LzGuimaraes.ProjectManager.Enum.Role;
 import dev.LzGuimaraes.ProjectManager.Exceptions.ResourceNotFoundException;
+import dev.LzGuimaraes.ProjectManager.Mapper.UserMapper;
 import dev.LzGuimaraes.ProjectManager.Repository.UserRepository;
 import dev.LzGuimaraes.ProjectManager.dto.User.UserRequestDTO;
 import dev.LzGuimaraes.ProjectManager.dto.User.UserResponseDTO;
@@ -15,20 +16,21 @@ import dev.LzGuimaraes.ProjectManager.model.User;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        
     }
 
     public UserResponseDTO createUser(UserRequestDTO dto) {
-
         if (userRepository.findByUsername(dto.username()).isPresent()) {
             throw new IllegalArgumentException("Username já existe: " + dto.username());
         }
 
-        User user = new User();
-        user.setUsername(dto.username());
-        user.setEmail(dto.email());
+        User user = userMapper.toEntity(dto);
+
         if (userRepository.count() == 0) {
             user.setRole(Role.ADMIN);
         } else {
@@ -36,17 +38,17 @@ public class UserService {
         }
 
         User savedUser = userRepository.save(user);
-        return toDTO(savedUser);
+        return userMapper.toDTO(savedUser);
     }
 
     public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
-                .map(this::toDTO);
+                .map(userMapper::toDTO);
     }
 
     public UserResponseDTO getUserById(Long id) {
         return userRepository.findById(id)
-                .map(this::toDTO)
+                .map(userMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado: " + id));
     }
 
@@ -67,7 +69,7 @@ public class UserService {
         }
         
         User updatedUser = userRepository.save(user);
-        return toDTO(updatedUser);
+        return userMapper.toDTO(updatedUser);
     }
 
     public void deleteUser(Long id) {
@@ -75,14 +77,5 @@ public class UserService {
             throw new ResourceNotFoundException("Usuário não encontrado para exclusão: " + id);
         }
         userRepository.deleteById(id);
-    }
-
-    private UserResponseDTO toDTO(User user) {
-        return new UserResponseDTO(
-            user.getId(),
-            user.getUsername(),
-            user.getEmail(),
-            user.getRole()
-        );
     }
 }
