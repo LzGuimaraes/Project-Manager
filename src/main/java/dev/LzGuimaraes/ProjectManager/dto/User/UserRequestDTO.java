@@ -1,6 +1,6 @@
 package dev.LzGuimaraes.ProjectManager.dto.User;
 
-import javax.management.relation.Role;
+import dev.LzGuimaraes.ProjectManager.Enum.Role;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
