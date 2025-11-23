@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
@@ -43,7 +42,10 @@ public class ProjectController {
     }
     // LISTAR PROJETOS POR USERNAME
     @GetMapping("/by-username/{username}")
-    public ResponseEntity<Page<ProjectResponseDTO>> getProjectsByUsername(String username, Pageable pageable) {
+    public ResponseEntity<Page<ProjectResponseDTO>> getProjectsByUsername(
+        @PathVariable("username") String username,
+        Pageable pageable
+    ) {
         Page<ProjectResponseDTO> projects = projectService.getProjectsByUsername(username, pageable);
         return ResponseEntity.ok(projects);
     }
